@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.mapper.BoardMapper">
+	 <cache type="com.blog.cache.MybatisRedisCache" />
+ 
+	<select id="getBoard" resultType="Board" parameterType="board">
+		select board_id,board_name,board_desc,topic_num from boards
+		<where>
+		<if test="boardId != null and boardId !='' ">
+       	and board_id = #{boardId}
+        </if>
+        <if test="boardName != null and boardName !='' ">
+       	and board_name = #{boardName}
+        </if>
+        <if test="boardDesc != null and boardDesc !='' ">
+       	and board_desc like #{boardDesc}
+        </if>
+		</where>
+	</select> 
+	
+	<select id="getAllBoard" resultType="Board" parameterType="board">
+		select board_id,board_name,board_desc,topic_num from boards	
+	</select> 
+	
+	
+	<insert id="addBoard" useGeneratedKeys="true" parameterType="board">
+		insert into
+		boards(board_name,board_desc,topic_num)
+		values(#{boardName},#{boardDesc},#{topicNum})
+	</insert>
+
+	<delete id="deleteBoard" parameterType="board">
+        delete  from boards 
+		<where>
+		<if test="boardId != null and boardId !='' ">
+       	and board_id = #{boardId}
+        </if>
+        <if test="boardName != null and boardName !='' ">
+       	and board_name = #{boardName}
+        </if>
+        <if test="boardDesc != null and boardDesc !='' ">
+       	and board_desc like #{boardDesc}
+        </if>
+		</where>
+    </delete>
+    
+    <update id="updateUser" parameterType="user">
+    update boards
+    <set>
+    	<if test="boardId != null and boardId !='' ">
+       	and board_id = #{boardId}
+        </if>
+        <if test="boardName != null and boardName !='' ">
+       	and board_name = #{boardName}
+        </if>
+        <if test="boardDesc != null and boardDesc !='' ">
+       	and board_desc like #{boardDesc}
+        </if>
+    </set>
+    </update>
+
+</mapper>
