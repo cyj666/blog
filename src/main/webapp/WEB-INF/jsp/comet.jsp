@@ -81,7 +81,7 @@ var c = null;
 	$('.submit').click(function(){
 		//alert($(':text').val());
 		$.ajax({
-		    url:'test?value='+$(':text').val()+"&&cId="+c+"&&name=b",
+			 url:'test?value='+$(':text').val()+"&&myName=a"+"&&toName=b",
 		    type:'GET', //GET
 		    async:true,    //或false,是否异步
 		    //data:{value=$(':text').val()},

@@ -35,15 +35,27 @@
 		</where>
 	</select> 
 	
-	<select id="getAllUser" resultType="User" parameterType="user">
+	<select id="getUsers" resultType="User" parameterType="user">
+		select user_id,username,password,status,locked,credit,last_visit,last_ip from users
+		<where>
+		<if test="userId != null and userId !='' ">
+       	and user_id = #{userId}
+        </if>
+        <if test="username != null and username !='' ">
+       	and username = #{username}
+        </if>
+		</where>
+	</select> 
+	
+	<select id="getAllUser" resultType="User" >
 		select user_id,username,password,status,locked,credit,last_visit,last_ip from users		
 	</select> 
 	
-	
-	<insert id="addUser" useGeneratedKeys="true" parameterType="user">
+
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="user_id" parameterType="user">
 		insert into
 		users(username,password,status,locked,credit,last_visit,last_ip)
-		values(#{username},#{password},#{status},#{locked},#{credit},#{last_visit},#{last_ip})
+		values(#{username},#{password},#{status},#{locked},#{credit},#{lastVisit},#{lastIp})
 	</insert>
 
 
@@ -93,6 +105,9 @@
     	last_ip = #{lastIp}
     	</if>
     </set>
+    <where>
+    	user_id =#{userId}
+    </where>
     </update>
 	<!-- <select id="findUserByUsernameAll" resultMap="User">
 	SELECT *

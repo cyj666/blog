@@ -6,38 +6,39 @@
 	 <cache type="com.blog.cache.MybatisRedisCache" />
  
 	<select id="getPost" resultType="Post" parameterType="post">
-		select post_id,topic_id,post_type,post_title,post_text,create_time from posts
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
+		from posts p inner join topics_posts tp
+		on p.post_id = tp.post_id
 		<where>
-		<if test="boardId != null and boardId !='' ">
-       	and post_id = #{postId}
+		<if test="postId != null and postId !='' ">
+       	and p.post_id = #{postId}
+        </if>  
+        <if test="topicId != null and topicId !='' ">
+       	and tp.topic_id = #{topicId}
+        </if>     
+        <if test="postType != null and postType !='' ">
+       	and p.post_type = #{postType}
         </if>
-        <if test="boardName != null and boardName !='' ">
-       	and topic_id = #{topicId}
+        <if test="postTitle != null and postTitle !='' ">
+       	and p.post_title like #{postTitle}
         </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and post_type = #{postType}
+        <if test="postText != null and postText !='' ">
+       	and p.post_text like #{postText}
         </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and post_title like #{postTitle}
-        </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and post_text like #{postText}
-        </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and create_time like #{createTime}
+        <if test="createTime != null and createTime !='' ">
+       	and p.create_time like #{createTime}
         </if>
 		</where>
 	</select> 
 	
 	<select id="getPosts" resultType="Post" parameterType="post">
-		select post_id,topic_id,post_type,post_title,post_text,create_time from posts
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
+		from posts p inner join topics_posts tp
+		on p.post_id = tp.post_id
 		<where>
 		<if test="boardId != null and boardId !='' ">
        	and post_id = #{postId}
-        </if>
-        <if test="boardName != null and boardName !='' ">
-       	and topic_id = #{topicId}
-        </if>
+        </if>      
         <if test="boardDesc != null and boardDesc !='' ">
        	and post_type = #{postType}
         </if>
@@ -54,44 +55,73 @@
 	</select> 
 	
 	<select id="getAllPost" resultType="Post" parameterType="post">
-		select post_id,topic_id,post_type,post_title,post_text,create_time from posts
+		select post_id,post_type,post_title,post_text,create_time from posts
 	</select> 
 	
 	
 	<insert id="addPost" useGeneratedKeys="true" parameterType="post">
 		insert into
-		posts(topic_id,post_type,post_title,post_text,create_time)
-		values(#{topicId},#{postType},#{postTitle},#{postText},#{createTime})
+		posts(post_type,post_title,post_text,create_time)
+		values(#{postType,jdbcType=INTEGER},#{postTitle},#{postText},#{createTime})
 	</insert>
-
+	
+	<insert id="addPosts" useGeneratedKeys="true" parameterType="post">
+		insert into
+		posts(post_type,post_title,post_text,create_time)
+		values(#{postType,jdbcType=INTEGER},#{postTitle},#{postText},#{createTime})
+	</insert>
+	
+	<insert id="addAllPost" useGeneratedKeys="true" parameterType="list">
+		insert into
+		posts(post_type,post_title,post_text,create_time)
+		values
+		<foreach collection="list" item="p" index="index" separator=",">
+		(#{p.postType},#{p.postTitle},#{p.postText},#{p.createTime})
+		</foreach>		
+	</insert>
+	
+	
 	<delete id="deletePost" parameterType="post">
-        delete  from boards 
+        delete from posts 
 		<where>
-		<if test="boardId != null and boardId !='' ">
-       	and board_id = #{boardId}
+		<if test="postId != null and postId !='' ">
+       	and post_id = #{postId}
         </if>
-        <if test="boardName != null and boardName !='' ">
-       	and board_name = #{boardName}
+        <if test="postType != null and postType !='' ">
+       	and post_type = #{postType}
         </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and board_desc like #{boardDesc}
+        <if test="postTitle != null and postTitle !='' ">
+       	and post_title like #{postTitle}
+        </if>
+        <if test="postText != null and postText !='' ">
+       	and post_text like #{postText}
+        </if>
+        <if test="createTime != null and createTime !='' ">
+       	and create_time like #{createTime}
         </if>
 		</where>
     </delete>
     
+      
     <update id="updatePost" parameterType="post">
-    update boards
+    update posts
     <set>
-    	<if test="boardId != null and boardId !='' ">
-       	and board_id = #{boardId}
+        <if test="postType != null and postType !='' ">
+       	and post_type = #{postType}
         </if>
-        <if test="boardName != null and boardName !='' ">
-       	and board_name = #{boardName}
+        <if test="postTitle != null and postTitle !='' ">
+       	and post_title like #{postTitle}
         </if>
-        <if test="boardDesc != null and boardDesc !='' ">
-       	and board_desc like #{boardDesc}
+        <if test="postText != null and postText !='' ">
+       	and post_text like #{postText}
+        </if>
+        <if test="createTime != null and createTime !='' ">
+       	and create_time like #{createTime}
         </if>
     </set>
+    <where>
+    	post_id = #{postId}
+    </where>
     </update>
 
 </mapper>

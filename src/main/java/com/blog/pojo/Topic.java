@@ -1,7 +1,6 @@
 package com.blog.pojo;
 
 import java.util.Date;
-import java.util.Set;
 
 public class Topic extends BaseDomain {
 	
@@ -10,9 +9,7 @@ public class Topic extends BaseDomain {
 	}
 
 	private MainPost mainPost;//对应主帖子
-	
-
-	
+		
 	private int topicId;
 	
 	private Date createTime; //主题创建时间

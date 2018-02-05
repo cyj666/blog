@@ -10,8 +10,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnection;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.stereotype.Repository;
-
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 

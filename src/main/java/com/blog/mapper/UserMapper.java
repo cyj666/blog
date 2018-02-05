@@ -2,8 +2,6 @@ package com.blog.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.blog.pojo.User;
 
 public interface UserMapper {
@@ -15,8 +13,9 @@ public interface UserMapper {
 	/*public void addUser(@Param("username")String username,
 			@Param("password")String password);*/
 	public User getUser(User user);
+	public List<User> getUsers(User user);
 	public List<User> getAllUser();
-	public void addUser(User user);
+	public int addUser(User user);
 	public void deleteUser(User user);	
 	public void updateUser(User user);
 	//public List<User> findUserByUsername(@Param("username")String username); 

@@ -2,16 +2,12 @@ package com.blog.credentialsmatcher;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.validation.constraints.Null;
-
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.crypto.hash.Md5Hash;
-import org.apache.shiro.crypto.hash.Sha1Hash;
 
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher {
 

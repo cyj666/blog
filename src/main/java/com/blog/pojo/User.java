@@ -1,22 +1,14 @@
 package com.blog.pojo;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.solr.client.solrj.beans.Field;
 import org.apache.xmlbeans.impl.xb.ltgfmt.FileDesc.Role;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.NumberFormat;
-import org.springframework.format.annotation.NumberFormat.Style;
-
 import com.blog.tool.IPUtils;
 
 public class User extends BaseDomain {

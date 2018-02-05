@@ -3,21 +3,10 @@ package com.blog.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authc.ExpiredCredentialsException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.crypto.hash.SimpleHash;
 /*import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -50,7 +39,8 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		SimpleHash simpleHash = new SimpleHash("MD5", user.getPassword());
 		user.setPassword(simpleHash.toString());
-		 usermapper.addUser(user);
+		 int i = usermapper.addUser(user);
+		 logger.debug("执行成功条数："+i);
 		 logger.debug("用户"+user.getUsername()+"添加成功！");
 	}
 
@@ -165,6 +155,13 @@ public class UserServiceImpl implements UserService {
 		Subject subject = SecurityUtils.getSubject();
 	    subject.login(token); 
 	    return token;	       
+	}
+
+	@Override
+	public List<User> getUsers(User user) {
+		// TODO Auto-generated method stub
+		
+		return usermapper.getUsers(user);
 	}
 
 
