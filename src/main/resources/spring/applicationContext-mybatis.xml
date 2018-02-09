@@ -23,6 +23,7 @@
 		<property name="typeAliasesPackage" value="com.blog.pojo"></property>
 		<!-- mapper.xml -->
 		<property name="mapperLocations" value="classpath:mybatis/mappers/*.xml"></property>
+		
 	</bean>
 	
 	<!-- 定义mapper扫描器 -->

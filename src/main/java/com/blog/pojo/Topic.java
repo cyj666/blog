@@ -1,6 +1,7 @@
 package com.blog.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Topic extends BaseDomain {
 	
@@ -8,9 +9,11 @@ public class Topic extends BaseDomain {
 		// TODO Auto-generated constructor stub
 	}
 
-	private MainPost mainPost;//对应主帖子
+	//private MainPost mainPost;//对应主帖子
+	
+	private List<Post> posts;//对应的全部帖子
 		
-	private int topicId;
+	private int topicId;   //主题ID
 	
 	private Date createTime; //主题创建时间
 	
@@ -22,13 +25,13 @@ public class Topic extends BaseDomain {
 	
 	private int digest;   //收藏数？不清楚
 
-	public MainPost getMainPost() {
+	/*public MainPost getMainPost() {
 		return mainPost;
 	}
 
 	public void setMainPost(MainPost mainPost) {
 		this.mainPost = mainPost;
-	}
+	}*/
 
 
 	public int getTopicId() {
@@ -78,6 +81,28 @@ public class Topic extends BaseDomain {
 	public void setDigest(int digest) {
 		this.digest = digest;
 	}
+
+	
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+
+	@Override
+	public String toString() {
+		return "Topic [posts=" + posts + ", topicId=" + topicId + ", createTime="
+				+ createTime + ", lastPost=" + lastPost + ", views=" + views + ", replies=" + replies + ", digest="
+				+ digest + "]";
+	}
+		
+	
+	
 	
 	//private User user;    
+	
+	
 }

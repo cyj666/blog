@@ -54,8 +54,25 @@
 		</where>
 	</select> 
 	
+	<select id="getPostsByTopicId" resultType="Post" parameterType="int">
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
+		from posts p inner join topics_posts tp
+		on p.post_id = tp.post_id
+		<where>
+		<if test="topicId != null and topicId !='' ">
+       	and topic_id = #{topicId}
+       	</if>
+       	
+       	AND p.post_type = #{postType}
+       	
+       	ORDER BY p.create_time ASC
+       	</where>
+	</select> 
+	
 	<select id="getAllPost" resultType="Post" parameterType="post">
-		select post_id,post_type,post_title,post_text,create_time from posts
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
+		from posts p inner join topics_posts tp
+		on p.post_id = tp.post_id
 	</select> 
 	
 	
@@ -70,6 +87,8 @@
 		posts(post_type,post_title,post_text,create_time)
 		values(#{postType,jdbcType=INTEGER},#{postTitle},#{postText},#{createTime})
 	</insert>
+	
+	
 	
 	<insert id="addAllPost" useGeneratedKeys="true" parameterType="list">
 		insert into
@@ -91,13 +110,13 @@
        	and post_type = #{postType}
         </if>
         <if test="postTitle != null and postTitle !='' ">
-       	and post_title like #{postTitle}
+       	and post_title = #{postTitle}
         </if>
         <if test="postText != null and postText !='' ">
-       	and post_text like #{postText}
+       	and post_text = #{postText}
         </if>
         <if test="createTime != null and createTime !='' ">
-       	and create_time like #{createTime}
+       	and create_time = #{createTime}
         </if>
 		</where>
     </delete>
@@ -107,16 +126,16 @@
     update posts
     <set>
         <if test="postType != null and postType !='' ">
-       	and post_type = #{postType}
+       	post_type = #{postType},
         </if>
         <if test="postTitle != null and postTitle !='' ">
-       	and post_title like #{postTitle}
+       	and post_title = #{postTitle},
         </if>
         <if test="postText != null and postText !='' ">
-       	and post_text like #{postText}
+       	and post_text = #{postText},
         </if>
         <if test="createTime != null and createTime !='' ">
-       	and create_time like #{createTime}
+       	and create_time = #{createTime}
         </if>
     </set>
     <where>

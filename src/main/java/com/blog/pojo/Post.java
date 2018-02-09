@@ -9,13 +9,13 @@ public class Post extends BaseDomain {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private int postId;
+	private int postId;  //帖子ID
 	
 	private int topicId;//对应主题id
 	
-	private int postType;
+	private int postType;//帖子种类
 	
-	private String postTitle;
+	private String postTitle;  
 	
 	private String postText;
 	
@@ -67,6 +67,12 @@ public class Post extends BaseDomain {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [postId=" + postId + ", topicId=" + topicId + ", postType=" + postType + ", postTitle=" + postTitle
+				+ ", postText=" + postText + ", createTime=" + createTime + "]";
 	}
 	
 	

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.blog.listener.HelloWorld;
+import com.blog.pojo.Board;
+import com.blog.pojo.Topic;
 import com.blog.pojo.User;
+import com.blog.service.ForumService;
 import com.blog.service.UserService;
 import com.blog.tool.IPUtils;
 import com.blog.tool.Test;
@@ -27,6 +31,9 @@ public class BaseController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ForumService forumService;
 	
 	@RequestMapping("/index")
 	@ResponseBody
@@ -59,21 +66,17 @@ public class BaseController {
 		return name+" delete success!";
 	}
 	
-	@RequestMapping("/register")
-	@ResponseBody
-	public String register(@RequestParam("name") String name,
-			@RequestParam("password") String password,
-			HttpServletRequest request) {
-		User user = new User(name, password, request);
-		user.setLastVisit(new Date());
-		userService.addUser(user);
-		return userService.getUser(user).toString();
-	}
+	
 	
 	
 	@RequestMapping("/{active}")
 	public String active(@PathVariable String active) {
 		return active;
+	}
+	
+	@RequestMapping("/home")
+	public String index() {
+		return "/home/index";
 	}
 	
 	@ResponseBody
@@ -104,4 +107,11 @@ public class BaseController {
 		
 		//producerService.sendMessage(receiveQueue, "my name is cyj!"); 
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/test1",method=RequestMethod.GET)
+	public String test1()throws Exception {		
+		return forumService.getBoardLinkTopic(1).toString();
+	}
+	
 }

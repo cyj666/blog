@@ -1,7 +1,14 @@
 package com.blog.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -11,14 +18,21 @@ import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.blog.pojo.User;
 import com.blog.service.UserService;
+import com.blog.tool.CaptchaUtil;
+import com.blog.tool.IPUtils;
+
 
 
 @Controller
@@ -28,17 +42,33 @@ public class UserController {
 	UserService userService;
 	
 	
-	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(@RequestParam(value="username") String username,@RequestParam(value="password") String password,
-			HttpServletRequest request,Model model) {
-		String msg = "";
-		UsernamePasswordToken token = null;
+	@RequestMapping(value="/login.do",method=RequestMethod.POST)
+	public String login(@RequestParam(value="username") String username,
+			@RequestParam(value="password") String password,
+			@RequestParam(value="captcha") String captcha,
+			HttpServletRequest request,
+			Model model) {
+		String randomString = captcha.toUpperCase();
+		HttpSession session = request.getSession();
+		
+		String msg = "";	
+		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		try {
-		 token = userService.loginSuccess(username, password, request);
-		 msg="登录成功！登录IP:"+token.getHost();
+			if (!session.getAttribute("randomString").equals(randomString)) {
+				msg="验证码出错！请检查。";
+				model.addAttribute("message", msg);	
+				return "login";
+			}
+			//token = userService.loginSuccess(username, password, request);
+			//默认记住我
+			
+			token.setRememberMe(true);
+			Subject subject = SecurityUtils.getSubject();
+		    subject.login(token); 
+		    msg="登录成功！登录IP:"+token.getHost();
 	       // System.out.println(msg);  
 	        model.addAttribute("message", msg);		        	       
-	        return "index";  
+	        return "/home/index";  
 		} catch (IncorrectCredentialsException e) {  
 	        msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";  
 	        model.addAttribute("message", msg);  
@@ -81,4 +111,66 @@ public class UserController {
 		return "login"; 
 				
 	}
+	
+	/**
+	 * 验证码实现
+	 */
+	@RequestMapping(value = "/captcha", method = RequestMethod.GET)
+	@ResponseBody
+	public void captcha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		CaptchaUtil.outputCaptcha(request, response);
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)  
+	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {  
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+	    return "/home/index";
+	}  
+	
+	@RequestMapping(value="/register",method=RequestMethod.GET)
+	public String register(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		return "register";
+	}
+	
+	@RequestMapping(value="/register.do",method=RequestMethod.POST)
+	//@ResponseBody
+	public String register(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			@RequestParam("password2") String password2,
+			@RequestParam(value="captcha") String captcha,
+			HttpServletRequest request,
+			Model model) {
+		String randomString = captcha.toUpperCase();
+		HttpSession session = request.getSession();
+		String msg="";
+		if (!session.getAttribute("randomString").equals(randomString)) {
+			msg="验证码出错！请检查。";
+			model.addAttribute("message", msg);	
+			return "register";
+		}
+		if (!password.equals(password2)) {
+			msg="两次密码不一致。";
+			model.addAttribute("message", msg);	
+			return "register";
+		}
+		
+		User user = new User(username, password, request);
+		user.setLastVisit(new Date());
+		userService.addUser(user);
+		msg="注册成功！。";
+		model.addAttribute("message", msg);
+		return "register";
+	}
+	
 }

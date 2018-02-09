@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.mapper.TopicMapper">
+	 <cache type="com.blog.cache.MybatisRedisCache" />
+ 
+ <resultMap id="topicMap" type="com.blog.pojo.Topic">  
+    <id property="topicId" column="topic_id"/>  
+    <result property="createTime" column="create_time"/>  
+    <result property="lastPost" column="last_post"/>  
+    <result property="views" column="views"/> 
+    <result property="replies" column="replies"/> 
+    <result property="digest" column="digest"/> 
+    <!-- 进行 多表关联插叙，先关联user和role -->    
+    <collection property="posts" ofType="com.blog.pojo.Post">  
+     <id property="postId" column="post_id"/>  
+     <result property="postTitle" column="post_title"/> 
+     <result property="postType" column="post_type"/> 
+     <result property="postText" column="post_text"/> 
+     <result property="createTime" column="create_time1"/> 
+    </collection>        
+    </resultMap>  
+ 
+ 	<select id="getTopicLinkPost" resultMap="topicMap" parameterType="int">
+		SELECT * FROM topics t 
+		INNER JOIN topics_posts tp ON t.topic_id = tp.topic_id 
+		INNER JOIN posts p ON p.post_id = tp.post_id
+		<where>
+		<if test="topicId != null and topicId !='' ">
+       	t.topic_id = #{topicId}
+        </if>         
+		</where>
+		<if test="event == null or event ==0 ">      	
+        </if> 	
+        <if test="event == 1 ">  <!--按照查看数，回复数，创造时间排序  (取10条)-->
+          order by CONCAT(t.views,t.replies) DESC,t.create_time ASC	LIMIT 0,10
+        </if>  
+        <if test="event == 2 ">  <!--随机取10条-->
+          order by  RAND() LIMIT 0,10
+        </if>        
+	</select> 
+	
+	
+	
+	<select id="getTopic" resultType="Topic" parameterType="topic">
+		select topic_id,create_time,last_post,views,replies,digest 
+		from topics
+		<where>
+		<if test="topicId != null and topicId !='' ">
+       	and topic_id = #{topicId}
+        </if>         
+		</where>
+	</select> 
+		
+		
+	<select id="getTopicByBoardName" resultMap="topicMap" parameterType="String">
+		SELECT t.topic_id,t.create_time,t.digest,t.last_post,t.replies,t.views
+		,p.create_time ,p.post_id,p.post_text,p.post_title,p.post_type
+		FROM boards b INNER JOIN boards_topics bt ON b.board_id = bt.board_id
+		INNER JOIN topics t ON bt.topic_id = t.topic_id
+		INNER JOIN topics_posts tp ON t.topic_id = tp.topic_id
+		INNER JOIN posts p ON tp.post_id = p.post_id
+		<where>
+		<if test="boardName != null and boardName !='' ">
+       	and b.board_name = #{boardName}
+        </if>         
+        ORDER BY p.create_time ASC
+		</where>
+		
+	</select> 
+		
+		
+	
+	<select id="getAllTopic" resultType="Topic" >
+		select t.topic_id,t.create_time,t.last_post,t.views,t.replies,t.digest 
+		from topics t inner join topics_posts tp on t.topic_id = tp.topic_id
+	</select> 
+	
+	
+	<insert id="addTopic" useGeneratedKeys="true" parameterType="topic">
+		insert into
+		topics(create_time,last_post,views,replies,digest)
+		values(#{createTime},#{lastPost},#{views},#{replies},#{digest})
+	</insert>
+		
+	<insert id="addTopicLinkPost" useGeneratedKeys="true" parameterType="int">
+		insert into
+		topics_posts(topic_id,post_id)
+		values(#{topicId},#{postId})
+	</insert>
+		
+	
+	<delete id="deleteTopic" parameterType="topic">
+        delete from topics 
+		<where>
+		<if test="topicId != null and topicId !='' ">
+       	and topic_id = #{topicId}
+        </if>         
+		</where>
+    </delete>
+    <delete id="deleteTopicLinkPost" parameterType="int">
+        delete from topics_posts 
+		<where>
+			topic_id = #{topicId} and post_id = #{postId}
+               
+		</where>
+    </delete>
+    
+      
+    <update id="updatePost" parameterType="post">
+    update topics
+    <set>
+        <if test="createTime != null and createTime !='' ">
+       	create_time = #{createTime},
+        </if>
+        <if test="lastPost != null and lastPost !='' ">
+       	last_post = #{lastPost},
+        </if>
+        <if test="views != null and views !='' ">
+       	views = #{views},
+        </if>
+        <if test="replies != null and replies !='' ">
+       	replies = #{replies},
+        </if>
+        <if test="digest != null and digest !='' ">
+       	digest = #{digest}
+        </if>
+    </set>
+    <where>
+    	topic_id = #{topicId}
+    </where>
+    </update>
+    
+    
+     <update id="updatePostLinkPost" parameterType="int">
+    update topics_posts
+    <set>
+       post_id = #{postId}
+    </set>
+    <where>
+    	topic_id = #{topicId}
+    </where>
+    </update>
+
+</mapper>

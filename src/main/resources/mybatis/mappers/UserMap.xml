@@ -9,19 +9,40 @@
     <id property="userId" column="user_id"/>  
     <result property="username" column="username"/>  
     <result property="password" column="password"/>  
+    <result property="locked" column="locked"/>  
     <result property="status" column="status"/> 
+    <result property="lastVisit" column="last_visit"/> 
+    <result property="lastIp" column="last_ip"/> 
     <!-- 进行 多表关联插叙，先关联user和role -->  
     <collection property="roleSet" column="role_id" ofType="com.blog.pojo.Role">  
     <id property="id" column="role_id"/>  
     <result property="name" column="role_name"/>  
     <!-- 再在role中关联role和permission -->  
-    <collection property="permissionSet" column="permissionid" ofType="com.blog.pojo.Permission">  
+    <collection property="permissionSet" column="permission_id" ofType="com.blog.pojo.Permission">  
     <id property="id" column="permission_id"/>  
     <result property="name" column="permission_name"/>  
     </collection>  
     </collection>  
       
-    </resultMap>  
+    </resultMap> 
+    
+    <resultMap id="userPostMap" type="com.blog.pojo.User">  
+    <id property="userId" column="user_id"/>  
+    <result property="username" column="username"/>  
+    <result property="password" column="password"/>  
+    <result property="locked" column="locked"/>  
+    <result property="status" column="status"/> 
+    <result property="lastVisit" column="last_visit"/> 
+    <result property="lastIp" column="last_ip"/>  
+    <!-- 进行 多表关联插叙，先关联user和role -->  
+    <collection property="posts" ofType="com.blog.pojo.Post">  
+    <id property="postId" column="post_id"/>  
+    <result property="postType" column="post_type"/>  
+    <result property="postTitle" column="post_title"/>
+    <result property="postText" column="post_text"/>
+    <result property="createTime" column="create_time"/>
+    </collection>       
+    </resultMap>   
 
 	<select id="getUser" resultType="User" parameterType="user">
 		select user_id,username,password,status,locked,credit,last_visit,last_ip from users
@@ -51,22 +72,36 @@
 		select user_id,username,password,status,locked,credit,last_visit,last_ip from users		
 	</select> 
 	
+	<select id="getUserLinkPost" resultMap="userPostMap" parameterType="user">
+		SELECT *
+		FROM users u 
+		LEFT JOIN users_posts up ON u.user_id = up.user_id
+		LEFT JOIN posts p ON up.post_id = p.post_id
+		<where>
+		<if test="userId != null and userId !='' ">
+       	and user_id = #{userId}
+        </if>
+        <if test="username != null and username !='' ">
+       	and username = #{username}
+        </if>
+		</where>
+	</select> 
+
+	
+
 
 	<insert id="addUser" useGeneratedKeys="true" keyProperty="user_id" parameterType="user">
 		insert into
 		users(username,password,status,locked,credit,last_visit,last_ip)
 		values(#{username},#{password},#{status},#{locked},#{credit},#{lastVisit},#{lastIp})
 	</insert>
-
-
-	<!--<select id="simpleUserFind" resultType="User">
-		select * from users where
-		username = #{username}
-	</select> -->
 	
-	<!--<delete id="deleteUser" parameterType="int">
-        delete u,ur from users u,user_roles ur where u.user_id = ur.user_id AND u.user_id = #{id}
-    </delete>-->
+	<insert id="addUserPost" useGeneratedKeys="true" parameterType="int">
+		insert into
+		users_posts(user_id,post_id)
+		values(#{userId},#{postId})
+	</insert>
+
 
 	<delete id="deleteUser" parameterType="user">
         delete  from users 
@@ -76,6 +111,18 @@
         </if>
         <if test="username != null and username !='' ">
        	and username = #{username}
+        </if>
+        </where>
+    </delete>
+    
+    <delete id="deleteUserPost" parameterType="int">
+        delete  from users_posts
+		<where>
+        <if test="userId != null and userId !='' ">
+       	and user_id = #{userId}
+        </if>
+        <if test="username != null and username !='' ">
+       	and post_id = #{postId}
         </if>
         </where>
     </delete>
@@ -107,29 +154,20 @@
     </set>
     <where>
     	user_id =#{userId}
-    </where>
+    </where>  
     </update>
-	<!-- <select id="findUserByUsernameAll" resultMap="User">
+    
+    
+	<select id="findUserByUsernameLinkRoleAndPermission" resultMap="userPostMap" parameterType="String">
 	SELECT *
 	FROM users u 
-	LEFT JOIN user_roles ur ON u.user_id = ur.user_id 
+	LEFT JOIN users_roles ur ON u.user_id = ur.user_id 
 	LEFT JOIN roles r ON r.role_id = ur.role_id
 	LEFT JOIN roles_permissions rp ON rp.role_id = r.role_id
 	LEFT JOIN permissions p ON p.permission_id = rp.permission_id
 	WHERE u.username = #{username}
-	</select>-->
+	</select>
 	
-	<!-- <select id="findUserByUsername" resultType="User">
-	select user_id,username,password,status,locked from users where
-		username = #{username}
-	</select>-->
 	
-	<!--  SELECT username,role_name,`status`,role_desc as roles,permission_name as permissions
-	FROM users u 
-	LEFT JOIN user_roles ur ON u.user_id = ur.user_id 
-	LEFT JOIN roles r ON r.role_id = ur.role_id
-	LEFT JOIN roles_permissions rp ON rp.role_id = r.role_id
-	LEFT JOIN permissions p ON p.permission_id = rp.permission_id
-	WHERE u.username = #{username}-->
 
 </mapper>

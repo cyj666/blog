@@ -1,5 +1,7 @@
 package com.blog.pojo;
 
+import java.util.List;
+
 //论坛板块类
 public class Board extends BaseDomain {
 
@@ -9,11 +11,13 @@ public class Board extends BaseDomain {
 	
 	private long boardId;  //论坛板块ID
 	
-	private String boardName; 
+	private String boardName;  //版块名
 	
-	private String boardDesc;
+	private String boardDesc;  //版块描述
 	
-	private int topicNum;  //主题数量
+	//private int topicNum;  //主题数量
+	
+	private List<Topic> topics;  //对应的主题
 
 	public long getBoardId() {
 		return boardId;
@@ -39,12 +43,21 @@ public class Board extends BaseDomain {
 		this.boardDesc = boardDesc;
 	}
 
-	public int getTopicNum() {
-		return topicNum;
+	
+	/*public int getTopicNum() {
+		return topics.size();
 	}
 
-	public void setTopicNum(int topicNum) {
+	private void setTopicNum(int topicNum) {
 		this.topicNum = topicNum;
+	}*/
+
+	public List<Topic> getTopics() {
+		return topics;
+	}
+
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
 	}
 
 	@Override
@@ -71,9 +84,11 @@ public class Board extends BaseDomain {
 
 	@Override
 	public String toString() {
-		return "Board [boardId=" + boardId + ", boardName=" + boardName + ", boardDesc=" + boardDesc + ", topicNum="
-				+ topicNum + "]";
+		return "Board [boardId=" + boardId + ", boardName=" + boardName + ", boardDesc=" + boardDesc + ", topics="
+				+ topics + "]";
 	}
+
+	
 	
 	
 	

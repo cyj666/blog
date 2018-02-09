@@ -2,12 +2,14 @@ package com.blog.pojo;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.xmlbeans.impl.xb.ltgfmt.FileDesc.Role;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.blog.tool.IPUtils;
 
@@ -19,11 +21,11 @@ public class User extends BaseDomain {
 	private int userId;
 	
 	//@Field("name")
-	//@NotBlank(message="不能为空")
+	@NotBlank(message="不能为空")
 	private String username;
 	
 	
-	//@NotBlank(message="不能为空")
+	@NotBlank(message="不能为空")
 	private String password;
 	
 	private Integer status ;
@@ -44,7 +46,7 @@ public class User extends BaseDomain {
 	
 	private Set<Board> manBoards; //用户关注的主模块
 	
-	
+	private List<Post> posts;
 	
 	
 	public User(String username,String password,HttpServletRequest request) {
@@ -183,15 +185,28 @@ public class User extends BaseDomain {
 	}
 
 
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+
+
+	
+
+
+
+
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", status=" + status
 				+ ", locked=" + locked + ", roleSet=" + roleSet + ", credit=" + credit + ", lastVisit=" + lastVisit
-				+ ", lastIp=" + lastIp + ", manBoards=" + manBoards + "]";
+				+ ", lastIp=" + lastIp + ", posts=" + posts + "]";
 	}
-
-
-
 
 
 	@Override

@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService {
 	public User getUser(User user) {
 		// TODO Auto-generated method stub
 		logger.debug("用户"+user.getUsername()+"查询成功！");
-		return usermapper.getUser(user);
+		User u = usermapper.getUser(user);
+		return u;
 		
 	}
 
@@ -162,6 +163,30 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 		return usermapper.getUsers(user);
+	}
+
+	@Override
+	public User findUserByUsernameLinkRoleAndPermission(String username) {
+		// TODO Auto-generated method stub
+		return usermapper.findUserByUsernameLinkRoleAndPermission(username);
+	}
+
+	@Override
+	public User getUserLinkPost(User user) {
+		// TODO Auto-generated method stub
+		return usermapper.getUserLinkPost(user);
+	}
+
+	@Override
+	public int addUserPost(int userId, int postId) {
+		// TODO Auto-generated method stub
+		return usermapper.addUserPost(userId, postId);
+	}
+
+	@Override
+	public void deleteUserPost(int userId, int postId) {
+		// TODO Auto-generated method stub
+		usermapper.deleteUserPost(userId, postId);
 	}
 
 
