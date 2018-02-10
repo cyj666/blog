@@ -89,16 +89,14 @@
 			<div class="col-md-8 left-menu">
 				<div class="title">
 					<a href="/home">XX论坛</a> »<a href="/board"> 话题 </a> » <a
-						href="/topic?boardName=${boardName}"> ${boardName} </a> » 帖子
+						href="/topic?boardName=${board.boardName}"> ${board.boardName} </a> » 帖子
 				</div>
 				<div class="main-topic home-post-list">
 					<div class="post-list-detail">
 					<c:if test="${msg!=null}">
 					<h4>${msg}</h4>
 					</c:if>
-					<c:if test="${msg==null}">
-					
-					
+					<c:if test="${msg==null}">	
 						<img src="//cdn.94cb.com/upload/tag/middle/320.png" alt="功能"
 							class="img-circle">
 						<div class="post-item-content">							

@@ -80,50 +80,13 @@
 				<div>
 					<h4>话题广场</h4>
 					<p>
-						<a class="tag" href="#" target=_blank>都市生活</a>
-						<a class="hot tag" href="#" target=_blank>都市生活</a>
-						<a class="tag" href="#" target=_blank>都市市</a>	
-						<a class="hot tag" href="#" target=_blank>都活</a>
-						<a class="tag" href="#" target=_blank>都市生活</a>
-						<a class="hot tag" href="#" target=_blank>都市市</a>
+					<c:forEach var="b" items="${boards}">
+						<a class="tag" href="/topic?boardName=${b.boardName}">${b.boardName}</a>
+					</c:forEach>	
 					<hr style="margin: 0; padding: 0">
 					</p>
 				</div>
-				<div>
-					
-					<p>
-						<p>
-						<a class="hot tag" href="#" target=_blank>都市生活</a>
-						<a class="hot tag" href="#" target=_blank>都市生活</a>
-						<a class="tag" href="#" target=_blank>都市市</a>	
-						<a class="hot tag" href="#" target=_blank>都市生活</a>
-						<a class="tag" href="#" target=_blank>都市生活</a>
-						<a class="tag" href="#" target=_blank>都市市</a>
-					<hr style="margin: 0; padding: 0">
-
-
-				</div>
-				<div>
-					
-					<p>
-						<a class="tag" href="#" target=_blank>小说作品</a>
-						<a class="tag" href="#" target=_blank>人文社科</a>
-						<a class="hot tag" href="#" target=_blank>成功励志 </a>	
-						<a class="tag" href="#" target=_blank>经济管理</a>
-						<a class="hot tag" href="#" target=_blank>品质生活</a>
-						<a class="tag" href="#" target=_blank>more</a>					
-					<hr style="margin: 0; padding: 0">
-					</p>
-
-				</div>
-				<div>
-					
-					<p>
-						<a class="tag" href="#" target=_blank>小说作品</a>
-						<a class="tag" href="#" target=_blank>人文社科</a>
-						<a class="hot tag" href="#" target=_blank>more</a>
-					</p>
-				</div>
+				
 				
 			</div>
 			<div id="myCarousel" class="col-md-7 carousel slide col-md-offset-1"
@@ -166,6 +129,7 @@
 					class="glyphicon glyphicon-chevron-right"></span></a>
 			</div>
 			<div class="col-md-4 right-menu second">
+			<shiro:guest>
 				<span class="text-danger">${msg}</span>
 				<div class="sider-box-title"> 登 录 </div>
 				<form action="/login.do" method="post" class="">
@@ -185,7 +149,11 @@
                 <button style="margin-left:50px;" type="submit" tabindex="4" class="btn btn-success">登录</button>
                 <a href="/register" tabindex="6" class="btn btn-link text-muted">注册</a>
 				</form>
-				
+				</shiro:guest>
+				<shiro:user>
+					<div class="sider-box-title">用户信息  </div>
+					<a href="user?username=<shiro:principal></shiro:principal>">昵称：<shiro:principal></shiro:principal></a><br>
+				</shiro:user>
 				<div class="bg-success context hidden">
 					<marquee onMouseOut="this.start()" onMouseOver="this.stop()"
 						behavior="alternate" scrolldelay="100">
@@ -202,44 +170,25 @@
 				style="width: 100%; height: 500px; border: 1px solid #e0dcd7;"></div>
 			<div class="test randomsee pull-left"
 				style="width: 680px; height: 500px; border: 1px solid #e0dcd7; margin-left: -15px; margin-top: 20px;">
-			<p>随机具体热门帖子内容</p>
-			<button class="btn test">测试</button>
-			<p></p>
+			
 			<div class="home-topic-list">
-				<div class="topic-list-detail">
+				<c:forEach var="t" items="${topics}">
+					<div class="topic-list-detail">
 						<img src="//cdn.94cb.com/upload/tag/middle/320.png" alt="功能"
 							class="img-circle">
-						<div class="topic-item-content">
-							<h4>功能</h4>
-
-							<span>&nbsp;&nbsp;希望  &nbsp;&nbsp;&nbsp;&nbsp; 建议 </span>
-						</div>
-						<div>
-						
+						<div class="topic-item-content">						
+							<a class="text-info" href="/post?topicId=${t.topicId}"><h4>${t.posts.get(0).postTitle}</h4></a>						
+							<div>						
 						<span>
 							<br />
 							admin&nbsp;·2018-02-07&nbsp;·最后回复由admin&nbsp;</span>
-							<span class="label label-primary" style="float: right;">3</span>
-							  
+							<span class="label label-primary" style="float: right;">3</span>							  
 						</div>
-				</div>
-				<div class="topic-list-detail">
-						<img src="//cdn.94cb.com/upload/tag/middle/320.png" alt="功能"
-							class="img-circle">
-						<div class="topic-item-content">
-							<h4>功能</h4>
-
-							<span>&nbsp;&nbsp;希望  &nbsp;&nbsp;&nbsp;&nbsp; 建议 </span>
 						</div>
-						<div>
 						
-						<span>
-							<br />
-							admin&nbsp;·2018-02-07&nbsp;·最后回复由admin&nbsp;</span>
-							<span class="label label-primary" style="float: right;">3</span>
-							  
-						</div>
-				</div>
+					</div>
+				</c:forEach>
+								
 			</div>
 			</div>
 			<div class="ad pull-right"
@@ -252,24 +201,21 @@
 				<div id="myTabContent" class="tab-content">
 					<div class="tab-pane fade in active" id="cxb">
 						<ol>
-							<li><img src="pic?picUrl=/book/西游记.jpg" width="48px"
-								height="64px" style="margin: 10px;">西游记</li>
+							<li>西游记</li>
 							<li>xxx</li>
 							<li>xxx</li>
 						</ol>
 					</div>
 					<div class="tab-pane fade" id="ydb">
 						<ol>
-							<li><img src="pic?picUrl=/book/倾城之恋.jpg" width="48px"
-								height="64px" style="margin: 10px;">倾城之恋</li>
+							<li>倾城之恋</li>
 							<li>xxx</li>
 							<li>xxx</li>
 						</ol>
 					</div>
 					<div class="tab-pane fade" id="hpb">
 						<ol>
-							<li><img src="pic?picUrl=/book/孤鸟.jpg" width="48px"
-								height="64px" style="margin: 10px;">孤鸟</li>
+							<li>孤鸟</li>
 							<li>xxx</li>
 							<li>xxx</li>
 						</ol>

@@ -88,7 +88,7 @@
 		<div class="row">
 			<div class="col-md-8 left-menu">
 				<div class="title">
-					<a href="/">XX论坛</a> » 话题
+					<a href="/home">XX论坛</a> » 话题
 				</div>
 				<div class="main-board home-board-list">
 				<c:forEach var="i" items="${page.list}">							

@@ -140,10 +140,13 @@ body a{
 }
 .topic-list-detail img{
 	display:inline-block;
+	//vertical-align:unset;
+	margin-top:-100px;
 }
 .topic-item-content{
 	display: inline-block;
 	padding-left:20px;
+	padding-top:40px;
 }
 .topic-item-content span{
 	color:#b7b8ab;

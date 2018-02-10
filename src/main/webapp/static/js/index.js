@@ -2,20 +2,20 @@
  * 
  */
 $(function() {
-		$(".notice").load("/notice"/*,"",function(responseTxt,statusTxt,xhr){
+		/*$(".notice").load("/notice"/*,"",function(responseTxt,statusTxt,xhr){
 				    if(statusTxt=="success")
 				        alert("外部内容加载成功！");
 				      if(statusTxt=="error")
 				        alert("Error: "+xhr.status+": "+xhr.statusText);
-				    }*/)
+				    })*/
 	});
 $(function() {
-		$(".showbook").load("/getBookRandom",function(responseTxt,statusTxt,xhr){
+		/*$(".showbook").load("/getBookRandom",function(responseTxt,statusTxt,xhr){
 			/**
 			*load()方法返回的是字符串，不是json数据，所以要进行字符串转json
 			*
 			*/		
-			var userId = $(".userId").text();
+			/*var userId = $(".userId").text();
 			var json = JSON.parse(responseTxt);
 			$(".test").html('<h5 class="text-warning suibian">随便看看</h5>'
 					+'<a href="book?userId='+userId+'&bookId='+json[0].bookId+'&bookName='+json[0].bookName+'&bookAuthor='+json[0].bookAuthor+'"><img src="/pic?picUrl=/book/'+json[0].bookName+'.jpg" width="114px" height="160px" style="margin:10px;"></a>'
@@ -48,7 +48,7 @@ $(function() {
 					+'<small class="text-center" style="display:inline-block;width:114px;margin-left:10px;margin-right:10px">'+json[7].bookAuthor+'</small>'
 					+'<small class="text-center" style="display:inline-block;width:114px;margin-left:10px;margin-right:10px">'+json[8].bookAuthor+'</small>'
 					+'<small class="text-center" style="display:inline-block;width:114px;margin-left:10px;margin-right:10px">'+json[9].bookAuthor+'</small>');
-		});
+		});*/
 		
 	});
 

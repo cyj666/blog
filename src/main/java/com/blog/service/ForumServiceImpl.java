@@ -214,4 +214,22 @@ public class ForumServiceImpl implements ForumService {
 		return postMapper.getPostsByTopicId(topicId,postType);
 	}
 
+	@Override
+	public List<Board> getBoardByRand() {
+		// TODO Auto-generated method stub
+		return boardMapper.getBoardByRand();
+	}
+
+	@Override
+	public List<Topic> getTopicByRand() {
+		// TODO Auto-generated method stub
+		return topicMapper.getTopicByRand();
+	}
+
+	@Override
+	public Board getBoardLinkTopicByTopicId(int topicId) {
+		// TODO Auto-generated method stub
+		return boardMapper.getBoardLinkTopicByTopicId(topicId);
+	}
+
 }

@@ -44,8 +44,13 @@
 		</where>
 	</select> 
 	
-	<select id="getAllBoard" resultType="Board" parameterType="board">
+	<select id="getAllBoard" resultType="Board" >
 		select board_id,board_name,board_desc from boards	
+	</select> 
+	
+	<select id="getBoardByRand" resultType="Board" >
+		select board_id,board_name,board_desc from boards	
+		ORDER BY RAND() LIMIT 0,10
 	</select> 
 	
 	<select id="getBoardLinkTopic" resultMap="boardMap" parameterType="board">
@@ -63,6 +68,16 @@
         <if test="boardDesc != null and boardDesc !='' ">
        	and board_desc like #{boardDesc}
         </if>
+		</where>
+	</select> 
+	
+	<select id="getBoardLinkTopicByTopicId" resultMap="boardMap" parameterType="int">
+		SELECT * FROM boards b INNER JOIN boards_topics bt ON b.board_id = bt.board_id
+		INNER JOIN topics t ON bt.topic_id = t.topic_id
+		INNER JOIN topics_posts tp ON t.topic_id = tp.topic_id
+		INNER JOIN posts p ON tp.post_id = p.post_id
+		<where>
+       	t.topic_id = #{topicId}
 		</where>
 	</select> 
 	

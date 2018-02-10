@@ -41,6 +41,16 @@
         </if>        
 	</select> 
 	
+	<select id="getTopicByRand" resultMap="topicMap" >
+		SELECT * FROM topics t 
+		INNER JOIN topics_posts tp ON t.topic_id = tp.topic_id 
+		INNER JOIN posts p ON p.post_id = tp.post_id
+		<where>
+		 p.post_type = 1   
+		</where>		
+          order by  RAND() LIMIT 0,10      
+	</select> 
+	
 	
 	
 	<select id="getTopic" resultType="Topic" parameterType="topic">

@@ -75,7 +75,8 @@ body {
 					</div>					
 					<div class="form-group">
 						<label for="password" class="col-sm-2 control-label">密码
-						<span class="glyphicon glyphicon-remove text-danger " style="display: none"></span>
+						<span class="glyphicon glyphicon-ok text-success password" style="display: none"></span>
+						<span class="glyphicon glyphicon-remove text-danger password" style="display: none"></span>
 						</label>
 						<div class="col-sm-10">
 							<form:input type="password" class="form-control" id="password"
@@ -85,9 +86,12 @@ body {
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="password2" class="col-sm-2 control-label">确认密码</label>
+						<label for="password2" class="col-sm-2 control-label">确认密码
+						<span class="glyphicon glyphicon-ok text-success password2" style="display: none"></span>
+						<span class="glyphicon glyphicon-remove text-danger password2" style="display: none"></span>
+						</label>						
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="password2"
+							<input type="password" class="form-control" id="password2" name="password2"
 								placeholder="请输入密码" style="width: 300px" />
 						</div>
 					</div>
@@ -99,7 +103,7 @@ body {
 						</div>
 					</div>
 					<div class="form-group ">
-						<div class="col-sm-offset-2 col-sm-10">
+						<div class="col-sm-offset-2 col-sm-10">						
 							<input class="form-control required" type="text" id="captcha"
 								placeholder="验证码" name="captcha" class="text" maxlength="5"
 								style="width: 100px; display: inline" required /><img
@@ -133,7 +137,12 @@ body {
 			});
 	$("#password2").blur(function() {
 		if ($("#password").val()!=$(this).val()) {
-			alert("两次密码不一样");
+			layer.tips("两次密码不一致",this);
+			$(".password2").eq(1).css("display","inline");
+			$(".password2").eq(0).css("display","none");
+		}else{
+			$(".password2").eq(0).css("display","inline");
+			$(".password2").eq(1).css("display","none");
 		}
 	})
 	$("#username").blur(function() {
@@ -155,5 +164,35 @@ body {
 POWERMODE.colorful = true; // 控制开启/开启礼花特效  
 POWERMODE.shake = true; // 控制开启/关闭屏幕震动特效  
 document.body.addEventListener('input', POWERMODE);
+$(function(){
+	var href=location.href;  
+	   if(href.indexOf("message")>0){  
+	      var message = decodeURI(getQueryVariable("message"));
+	      if (message=="注册成功！") {
+	    	  layer.alert(message, {
+					icon : 1,
+					skin : 'layui-layer-molv',// 样式类名
+					closeBtn : 1
+				});
+		}else{
+			layer.alert(message, {
+				icon : 2,
+				skin : 'layui-layer-lan',// 样式类名
+				closeBtn : 1				
+			});
+		}
+	       
+	   }   
+});
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+}
 </script>
 </html>

@@ -13,7 +13,7 @@ public interface TopicMapper {
 	public Topic getTopic(Topic topic); //单独查topics表
 	public List<Topic> getAllTopic();
 	public List<Topic> getTopicByBoardName(@Param("boardName")String boardName);
-	
+	public List<Topic> getTopicByRand();
 	
 	public int addTopic(Topic topic);
 	public int addTopicLinkPost(@Param("topicId")int topicId,

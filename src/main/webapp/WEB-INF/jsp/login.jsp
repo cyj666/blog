@@ -87,7 +87,7 @@
                         <div class="controls">
                             <label for="captcha" class="control-label fa fa-key"></label>
                             <input style="width: 150;display:inline-block" id="captcha" type="text" name="captcha" placeholder="验证码" tabindex="2" class="form-control input-medium">
-                            <img id="captchaImage" src="/captcha" />
+                            <img class="" id="captchaImage" src="/captcha" />
                             <i class="control-label fa fa-refresh" style="margin-left:3px;"></i>
                         </div>
                     </div>
@@ -133,6 +133,7 @@ $(function(){
 				icon : 2,
 				skin : 'layui-layer-lan',// 样式类名
 				closeBtn : 1
+				
 			});
 	   }   
 });

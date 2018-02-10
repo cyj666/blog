@@ -1,6 +1,7 @@
 package com.blog.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -42,6 +43,7 @@ public class UserController {
 	UserService userService;
 	
 	
+	
 	@RequestMapping(value="/login.do",method=RequestMethod.POST)
 	public String login(@RequestParam(value="username") String username,
 			@RequestParam(value="password") String password,
@@ -52,6 +54,7 @@ public class UserController {
 		HttpSession session = request.getSession();
 		
 		String msg = "";	
+		User user =  new User();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		try {
 			if (!session.getAttribute("randomString").equals(randomString)) {
@@ -59,15 +62,21 @@ public class UserController {
 				model.addAttribute("message", msg);	
 				return "login";
 			}
-			//token = userService.loginSuccess(username, password, request);
+
 			//默认记住我
 			
 			token.setRememberMe(true);
 			Subject subject = SecurityUtils.getSubject();
 		    subject.login(token); 
 		    msg="登录成功！登录IP:"+token.getHost();
-	       // System.out.println(msg);  
-	        model.addAttribute("message", msg);		        	       
+		    
+		    user =  userService.getUserByUsername(username);
+		    userService.setCredit(user, user.getCredit()+1); //每次登录积分加一
+		    userService.setLastVisit(user, new Date());
+		    userService.setLastIp(user, IPUtils.getRemortIP(request));
+		   // user =  userService.getUserByUsername(username);
+	        model.addAttribute("message", msg);	
+	        //model.addAttribute("user", user);	
 	        return "/home/index";  
 		} catch (IncorrectCredentialsException e) {  
 	        msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";  
@@ -133,7 +142,7 @@ public class UserController {
 	public String logout(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {  
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
-	    return "/home/index";
+	    return "redirect:/home";
 	}  
 	
 	@RequestMapping(value="/register",method=RequestMethod.GET)
@@ -160,17 +169,23 @@ public class UserController {
 			return "register";
 		}
 		if (!password.equals(password2)) {
-			msg="两次密码不一致。";
+			msg="两次密码不一致！";
 			model.addAttribute("message", msg);	
 			return "register";
 		}
 		
 		User user = new User(username, password, request);
 		user.setLastVisit(new Date());
-		userService.addUser(user);
-		msg="注册成功！。";
-		model.addAttribute("message", msg);
-		return "register";
+		try {
+			userService.addUser(user);
+			msg="注册成功！";
+			model.addAttribute("message", msg);			
+		} catch (Exception e) {
+			// TODO: handle exception
+			msg="注册失败，出现异常！";
+			model.addAttribute("message", msg);	
+		}		
+		return "redirect:register";
 	}
 	
 }

@@ -17,10 +17,10 @@ public class User extends BaseDomain {
 
 	private static final long serialVersionUID = -1672970955045193907L;  
 	
-	//@Field("id")
+	
 	private int userId;
 	
-	//@Field("name")
+	
 	@NotBlank(message="不能为空")
 	private String username;
 	

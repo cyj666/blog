@@ -74,10 +74,7 @@ public class BaseController {
 		return active;
 	}
 	
-	@RequestMapping("/home")
-	public String index() {
-		return "/home/index";
-	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value="/start",method=RequestMethod.GET)
