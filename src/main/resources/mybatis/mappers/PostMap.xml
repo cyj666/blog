@@ -4,6 +4,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.blog.mapper.PostMapper">
 	 <cache type="com.blog.cache.MybatisRedisCache" />
+	 
+
  
 	<select id="getPost" resultType="Post" parameterType="post">
 		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
@@ -20,13 +22,32 @@
        	and p.post_type = #{postType}
         </if>
         <if test="postTitle != null and postTitle !='' ">
-       	and p.post_title like #{postTitle}
+       	and p.post_title = #{postTitle}
         </if>
         <if test="postText != null and postText !='' ">
-       	and p.post_text like #{postText}
+       	and p.post_text = #{postText}
         </if>
+		</where>
+	</select> 
+	
+	<select id="getPostByPost" resultType="Post" parameterType="post">
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time
+		from posts p
+		<where>
+		<if test="postId != null and postId !='' ">
+       	and p.post_id = #{postId}
+        </if>   
         <if test="createTime != null and createTime !='' ">
-       	and p.create_time like #{createTime}
+       	and p.create_time = #{createTime}
+        </if>
+        <if test="postType != null and postType !='' ">
+       	and p.post_type = #{postType}
+        </if>
+        <if test="postTitle != null and postTitle !='' ">
+       	and p.post_title = #{postTitle}
+        </if>
+        <if test="postText != null and postText !='' ">
+       	and p.post_text = #{postText}
         </if>
 		</where>
 	</select> 
@@ -55,9 +76,10 @@
 	</select> 
 	
 	<select id="getPostsByTopicId" resultType="Post" parameterType="int">
-		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id
-		from posts p inner join topics_posts tp
-		on p.post_id = tp.post_id
+		select p.post_id,p.post_type,p.post_title,p.post_text,p.create_time,tp.topic_id,u.username
+			from posts p inner join topics_posts tp on p.post_id = tp.post_id
+									INNER JOIN users_posts up ON p.post_id = up.post_id
+									INNER JOIN users u ON u.user_id = up.user_id
 		<where>
 		<if test="topicId != null and topicId !='' ">
        	and topic_id = #{topicId}
@@ -66,6 +88,13 @@
        	AND p.post_type = #{postType}
        	
        	ORDER BY p.create_time ASC
+       	</where>
+	</select> 
+	
+	<select id="getUserIdByPost" resultType="int" parameterType="int">
+		SELECT up.user_id FROM posts p INNER JOIN users_posts up ON p.post_id = up.post_id
+		<where>		
+       	p.post_id = #{postId}
        	</where>
 	</select> 
 	

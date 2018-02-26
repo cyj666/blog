@@ -12,6 +12,7 @@
 	src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="icon" href="${ctx}/static/ico/bitbug_favicon.ico"
 	type="image/x-icon">
+<script type="text/javascript" src="${ctx}/static/layer.js"></script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,25 +24,19 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<%
-				if (session.getAttribute("user") != null) {
-			%>
+		<shiro:user>			
 			<span><small>欢迎，<a href="#"><span
-						class="text-warning"> ${sessionScope.user.getuName()}</span></small></a></span> <span>
-				<a href="logout"><small class="text-danger">退出登陆</small></a>
-				<p class="hidden userId">${sessionScope.user.getuId()}</p>
+						class="text-warning"><shiro:principal></shiro:principal></span></small></a></span> <span>
+				<a href="logout"><small class="text-danger">退出登陆</small></a>				
 			</span>
-			<%
-				} else {
-			%>
+			</shiro:user>		
+			<shiro:guest>
 			<a href="/login" style="text-decoration: none;"><small><span
 					class="text-danger">&emsp;登录 <span class="caret"></span>&emsp;|
 				</span></small></a> <a href="/register" style="text-decoration: none;"><small><span
 					class="text-warning">&emsp;注册&emsp;</span></small></a>
-			<%
-				}
-			%>
-
+			
+			</shiro:guest>
 		</div>
 		<div class="row">
 			<div class="col-md-2">
@@ -104,14 +99,13 @@
 							• 5人收藏	• 297人看过</span>
 						</div>
 						<div>
-								<h3>${postsMain.get(0).postTitle}</h3>
+								<h3 class="postMain">${postsMain.get(0).postTitle}</h3>
 								<hr/>
-							<span> ${postsMain.get(0).postText}
-							</span>
+							<span class="postMain">${postsMain.get(0).postText}</span>
 								<hr/>
 								
 						</div>
-						
+						<c:if test="${page.list.size()!=0}">
 						<div class="bg-info replies-title">
 							${page.list.size()}个回复&nbsp;|&nbsp;
 							最后更新于 <fmt:formatDate value="${page.list.get(page.list.size()-1).createTime}" type="both"/>&nbsp;	
@@ -124,7 +118,7 @@
 						<img src="//cdn.94cb.com/upload/tag/middle/320.png" alt="功能"
 							class="img-circle">
 						<div class="post-item-content">							
-							<span><a href="/u/meya">admin </a></span>
+							<span><a href="/u/meya">${i.username}</a></span>
 						</div>
 						<div>
 						<br>
@@ -135,7 +129,7 @@
 						</div>
 					    </div>
 						</c:forEach>
-						
+						</c:if>
 						</c:if>
 				</div>
 			</div>
@@ -168,14 +162,15 @@
 					系统公告....
 				</div>
 			</div>
-
-	<div class="post-repliyByMe">
-		<span>admin</span><h4>回帖:</h4>
-		<div class="post-repliyByMe-detail">
 			
+	<shiro:user>
+	<div class="post-repliyByMe">
+		<span><shiro:principal></shiro:principal></span><h4>回帖:</h4>
+		<div class="post-repliyByMe-detail">	
 		</div>
+		<button id="submit">发帖</button>
 	</div>
-		
+	</shiro:user>	
 		
 		
 	</div>
@@ -197,16 +192,32 @@
  <!-- 引用js -->
     <script type="text/javascript" src="${ctx }/static/js/wangEditor.min.js"></script>
     <script type="text/javascript">
-        var E = window.wangEditor
-
-        /*var editor1 = new E('#div1', '#div2')
-        editor1.create()*/
-
-        var editor2 = new E('.post-repliyByMe-detail')
-        editor2.create()
+        var E = window.wangEditor;
+        var editor = new E('.post-repliyByMe-detail');
+        editor.create();
+ 		$("#submit").click(function(){
+        	//alert('postText='+editor.txt.text()+"postMainTitle="+$(".postMain").eq(0).text()+"postMainText="+$(".postMain").eq(1).text());
+        	$.ajax({
+        		type:"GET",
+        		//url:"/postMain?postTitle="+$("input[name='postTitle']").val()+"&&postText="+editor.txt.text(),
+        		//dataType: false,
+        		url:"/postOthers",
+        		data:'postText='+editor.txt.text()+"&&postMainTitle="+$(".postMain").eq(0).text()+"&&postMainText="+$(".postMain").eq(1).text(),
+    			success:function(data, textStatus){
+    				layer.msg("发帖成功！经验+1",{
+    					icon:1
+    				})
+    				//alert("发帖成功！经验+"+data); 
+    			},
+    			error: function(XMLHttpRequest, textStatus, errorThrown){
+    				alert("发帖失败！原因:"+errorThrown);
+  			}
+    			
+        	})
+        })
     </script>
     <script type="text/javascript">
-$('#captchaImage').click(function() 
+	$('#captchaImage').click(function() 
 		{
 		  $('#captchaImage').attr("src", "captcha?timestamp=" + (new Date()).valueOf());
 		  

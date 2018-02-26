@@ -79,10 +79,10 @@
 		LEFT JOIN posts p ON up.post_id = p.post_id
 		<where>
 		<if test="userId != null and userId !='' ">
-       	and user_id = #{userId}
+       	and u.user_id = #{userId}
         </if>
         <if test="username != null and username !='' ">
-       	and username = #{username}
+       	and u.username = #{username}
         </if>
 		</where>
 	</select> 

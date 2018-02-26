@@ -232,4 +232,40 @@ public class ForumServiceImpl implements ForumService {
 		return boardMapper.getBoardLinkTopicByTopicId(topicId);
 	}
 
+	@Override
+	public Topic getTopic(Topic topic) {
+		// TODO Auto-generated method stub
+		return topicMapper.getTopic(topic);
+	}
+
+	@Override
+	public Post getPost(Post post) {
+		// TODO Auto-generated method stub
+		return postMapper.getPost(post);
+	}
+
+	@Override
+	public Post getPostByPost(Post post) {
+		// TODO Auto-generated method stub
+		return postMapper.getPostByPost(post);
+	}
+
+	@Override
+	public void addBoard(int boardId, int topicId) {
+		// TODO Auto-generated method stub
+		boardMapper.addBoardLinkTopic(boardId, topicId);
+	}
+
+	@Override
+	public int getUserIdByPost(int postId) {
+		// TODO Auto-generated method stub
+		return postMapper.getUserIdByPost(postId);
+	}
+
+	@Override
+	public int getPostCountBytopicId(int topicId) {
+		// TODO Auto-generated method stub
+		return topicMapper.getPostCountBytopicId(topicId);
+	}
+
 }

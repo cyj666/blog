@@ -20,6 +20,7 @@ public interface ForumService {
 	public void updateTopic(Topic topic);//更新
 	public int makeDigestTopic(int topicId);//设置收藏主题数量
 	public Topic getTopicById(int topicId);
+	public Topic getTopic(Topic topic);
 	public Topic getTopicLinkPost(int topicId);
 	public List<Topic> getTopicLinkPost();
 	public List<Topic> getTopicByBoardName(String boardName);
@@ -36,8 +37,11 @@ public interface ForumService {
 	public void removePost(int postId);
 	public void updatePost(Post post);
 	public Post getPostById(int postId);
+	public Post getPost(Post post);
+	public Post getPostByPost(Post post);
 	public List<Post> getPostsByTopicId(int topicId,int postType);
-	
+	public int getUserIdByPost(int postId);
+	public int getPostCountBytopicId(int topicId);
 	
 	
 	
@@ -46,6 +50,7 @@ public interface ForumService {
 	 * @param board
 	 */
 	public void addBoard(Board board);//增加版块
+	public void addBoard(int boardId,int topicId);//增加版块
 	public void removeBoard(Board board);
 	public void removeBoard(int boardId);
 	public void updateBoard(Board board);

@@ -13,7 +13,7 @@ public class Topic extends BaseDomain {
 	
 	private List<Post> posts;//对应的全部帖子
 		
-	private int topicId;   //主题ID
+	private Integer topicId;   //主题ID
 	
 	private Date createTime; //主题创建时间
 	
@@ -34,11 +34,11 @@ public class Topic extends BaseDomain {
 	}*/
 
 
-	public int getTopicId() {
+	public Integer getTopicId() {
 		return topicId;
 	}
 
-	public void setTopicId(int topicId) {
+	public void setTopicId(Integer topicId) {
 		this.topicId = topicId;
 	}
 

@@ -14,6 +14,7 @@ public interface TopicMapper {
 	public List<Topic> getAllTopic();
 	public List<Topic> getTopicByBoardName(@Param("boardName")String boardName);
 	public List<Topic> getTopicByRand();
+	public int getPostCountBytopicId(@Param("topicId")int topicId);
 	
 	public int addTopic(Topic topic);
 	public int addTopicLinkPost(@Param("topicId")int topicId,

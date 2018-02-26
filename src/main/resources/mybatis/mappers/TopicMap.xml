@@ -41,6 +41,18 @@
         </if>        
 	</select> 
 	
+	<!--得到回复帖子的数量  -->
+	<select id="getPostCountBytopicId" parameterType="int" resultType="int">
+		select COUNT(*) AS count
+		from posts p inner join topics_posts tp on p.post_id = tp.post_id
+		INNER JOIN users_posts up ON p.post_id = up.post_id
+		INNER JOIN users u ON u.user_id = up.user_id
+		<where>
+		topic_id = #{topicId}
+		</where>
+	 	and p.post_type = 0
+	</select>
+	
 	<select id="getTopicByRand" resultMap="topicMap" >
 		SELECT * FROM topics t 
 		INNER JOIN topics_posts tp ON t.topic_id = tp.topic_id 
@@ -59,7 +71,19 @@
 		<where>
 		<if test="topicId != null and topicId !='' ">
        	and topic_id = #{topicId}
-        </if>         
+        </if> 
+        <if test="createTime != null and createTime !='' ">
+       	and create_time = #{createTime}
+        </if> 
+        <if test="views != null and views !='' ">
+       	and views = #{views}
+        </if>   
+        <if test="replies != null and replies !='' ">
+       	and replies = #{replies}
+        </if>  
+        <if test="digest != null and digest !='' ">
+       	and digest = #{digest}
+        </if>           
 		</where>
 	</select> 
 		
@@ -74,7 +98,8 @@
 		<where>
 		<if test="boardName != null and boardName !='' ">
        	and b.board_name = #{boardName}
-        </if>         
+        </if> 
+        AND p.post_type = 1         
         ORDER BY p.create_time ASC
 		</where>
 		

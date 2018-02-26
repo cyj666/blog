@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.blog.pojo.Topic;
 import com.blog.service.ForumService;
@@ -44,6 +45,13 @@ public class TopicController {
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("board", forumService.getBoardByName(boardName));//版块
 		return "/topic";
+	}
+	
+	@RequestMapping(value = "/count")
+	@ResponseBody
+	public int getCount(@RequestParam("topicId")int topicId) {
+		int count = forumService.getPostCountBytopicId(topicId);
+		return count;
 	}
 
 }

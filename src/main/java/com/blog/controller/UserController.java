@@ -3,6 +3,7 @@ package com.blog.controller;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.blog.pojo.Post;
 import com.blog.pojo.User;
+import com.blog.service.ForumService;
 import com.blog.service.UserService;
 import com.blog.tool.CaptchaUtil;
 import com.blog.tool.IPUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 
 
@@ -41,6 +46,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ForumService forumService;
 	
 	
 	
@@ -77,7 +85,7 @@ public class UserController {
 		   // user =  userService.getUserByUsername(username);
 	        model.addAttribute("message", msg);	
 	        //model.addAttribute("user", user);	
-	        return "/home/index";  
+	        return "redirect:/home";  
 		} catch (IncorrectCredentialsException e) {  
 	        msg = "登录密码错误. Password for account " + token.getPrincipal() + " was incorrect.";  
 	        model.addAttribute("message", msg);  
@@ -188,4 +196,16 @@ public class UserController {
 		return "redirect:register";
 	}
 	
+	@RequestMapping(value="/user")
+	public String User(@RequestParam("username")String username,
+			@RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
+			@RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+			Model model) {
+		User user = userService.getUserByUsername(username);
+		user = userService.getUserLinkPost(user);
+		model.addAttribute("user", user);		
+		List<Post> posts = user.getPosts();	
+		model.addAttribute("posts", posts);
+		return "/user";
+	}
 }

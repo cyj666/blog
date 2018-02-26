@@ -12,6 +12,7 @@
 	src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <link rel="icon" href="${ctx}/static/ico/bitbug_favicon.ico"
 	type="image/x-icon">
+<script type="text/javascript" src="${ctx}/static/layer.js"></script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,27 +21,23 @@
 	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>XX论坛-总有你喜欢的</title>
 </head>
+
 <body>
 	<div class="container">
 		<div class="row">
-			<%
-				if (session.getAttribute("user") != null) {
-			%>
+			<shiro:user>			
 			<span><small>欢迎，<a href="#"><span
-						class="text-warning"> ${sessionScope.user.getuName()}</span></small></a></span> <span>
-				<a href="logout"><small class="text-danger">退出登陆</small></a>
-				<p class="hidden userId">${sessionScope.user.getuId()}</p>
+						class="text-warning"><shiro:principal></shiro:principal></span></small></a></span> <span>
+				<a href="logout"><small class="text-danger">退出登陆</small></a>				
 			</span>
-			<%
-				} else {
-			%>
+			</shiro:user>		
+			<shiro:guest>
 			<a href="/login" style="text-decoration: none;"><small><span
 					class="text-danger">&emsp;登录 <span class="caret"></span>&emsp;|
 				</span></small></a> <a href="/register" style="text-decoration: none;"><small><span
 					class="text-warning">&emsp;注册&emsp;</span></small></a>
-			<%
-				}
-			%>
+			
+			</shiro:guest>
 
 		</div>
 		<div class="row">
@@ -109,8 +106,8 @@
 								<div>						
 								<span>
 								<br />
-								admin&nbsp;·2017-05-05&nbsp;·最后回复由admin&nbsp;</span>
-								<span class="label label-primary" style="float: right;">3</span>							  
+								<span>admin</span>&nbsp;·2017-05-05&nbsp;·最后回复由admin&nbsp;</span>
+								<span class="label label-primary hidden" style="float: right;">${i.topicId}</span>							  
 								</div>
 						 	</div>					
 					</c:forEach>
@@ -122,7 +119,7 @@
 		
 			<div class="col-md-4 right-menu">
 				<div class="topic-jiesao">
-					<div class="sider-box-title"> 话题：${board.boardName}</div>
+					<div class="sider-box-title"> 话题：<span class="boardName">${board.boardName}</span></div>
 					<img class="img-thumbnail" src="//cdn.94cb.com/upload/tag/large/320.png" alt="功能" 
 					width="200" height="200">
 					<div class="sider-box-content">	
@@ -132,7 +129,7 @@
 				</div>
 			
 			
-			
+				<shiro:guest>
 				<div class="login">
 				<div class="sider-box-title"> 登 录 </div>
 				<form action="/login" method="post" class="">
@@ -157,23 +154,29 @@
 							class="btn btn-link text-muted">注册</a>
 				</form>
 				</div>
+				</shiro:guest>
+				<shiro:user>
+					<shiro:principal></shiro:principal>
+				</shiro:user>
 				<hr>
 				<div class="adv">
-				
+					广告
 				</div>
 				
 		
 		</div>
 		
 		
+		<shiro:user>
 		<div class="post-repliyByMe">
-			<span>admin</span><h4>发表新帖</h4><br/>
-			<span>标题：</span><input id="captcha" type="text" name="title" placeholder="标题" class="">
+			<span><shiro:principal></shiro:principal></span><h4>发表新帖</h4><br/>
+			<span>标题：</span><input id="postTitle" type="text" name="postTitle" placeholder="标题" class="">
 				<div class="post-repliyByMe-detail">
-			
 			</div>
-			
+			<button id="submit">发帖</button>
 		</div>
+		</shiro:user>
+		
 		</div>
 		
 			
@@ -211,7 +214,34 @@ $('#captchaImage').click(function()
         /*var editor1 = new E('#div1', '#div2')
         editor1.create()*/
 
-        var editor2 = new E('.post-repliyByMe-detail')
-        editor2.create()
+        var editor = new E('.post-repliyByMe-detail')
+        editor.create();
+       /* editor.txt.html('<p>用 JS 设置的内容</p>');
+        editor.txt.append('<p>追加的内容</p>');	*/
+        //editor.txt.clear();
+        $("#submit").click(function(){
+        	
+        	$.ajax({
+        		type:"GET",
+        		//url:"/postMain?postTitle="+$("input[name='postTitle']").val()+"&&postText="+editor.txt.text(),
+        		//dataType: false,
+        		url:"/postMain",
+        		data:'postTitle='+$("input[name='postTitle']").val()+'&&postText='+editor.txt.text()+"&&boardName="+$(".boardName").text(),
+    			success:function(data, textStatus){
+    				alert("发帖成功！经验+"+data); 
+    			},
+    			error: function(XMLHttpRequest, textStatus, errorThrown){
+    				alert("发帖失败！原因:"+errorThrown);
+  			}
+    			
+        	})
+        })
+        for (var i = 0; i < $(".label-primary").length; i++) {
+        	$(".label-primary").eq(i).load("/count", "topicId="+$(".label-primary").eq(i).text(), function(response,status,xhr) {
+            	$(this).text(response);
+            	$(this).removeClass("hidden");
+            })
+		}
+        
     </script>
 </html>

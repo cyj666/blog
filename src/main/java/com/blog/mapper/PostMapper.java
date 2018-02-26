@@ -14,4 +14,6 @@ public interface PostMapper {
 	public void addPost(Post post);
 	public void deletePost(Post post);
 	public void updatePost(Post post);
+	public Post getPostByPost(Post post);
+	public int getUserIdByPost(@Param("postId")int postId);
 }

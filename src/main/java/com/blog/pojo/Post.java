@@ -9,7 +9,7 @@ public class Post extends BaseDomain {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private int postId;  //帖子ID
+	private Integer postId;  //帖子ID
 	
 	private int topicId;//对应主题id
 	
@@ -20,12 +20,15 @@ public class Post extends BaseDomain {
 	private String postText;
 	
 	private Date createTime; //帖子创建时间
+	
+	private String username;
+	
 
-	public int getPostId() {
+	public Integer getPostId() {
 		return postId;
 	}
 
-	public void setPostId(int postId) {
+	public void setPostId(Integer postId) {
 		this.postId = postId;
 	}
 
@@ -74,6 +77,19 @@ public class Post extends BaseDomain {
 		return "Post [postId=" + postId + ", topicId=" + topicId + ", postType=" + postType + ", postTitle=" + postTitle
 				+ ", postText=" + postText + ", createTime=" + createTime + "]";
 	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	
+
+
 	
 	
 	
